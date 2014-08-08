@@ -8,3 +8,4 @@ TODO:
 * implement plugin helpers
 * implement plugin capabilities
 * implement slave config
+* l18n
