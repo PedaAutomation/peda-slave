@@ -1,0 +1,31 @@
+{
+  "name": "peda-slave",
+  "version": "0.0.0",
+  "description": "The slave for PEDAAutomation",
+  "main": "lib/index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/PedaAutomation/peda-slave.git"
+  },
+  "keywords": [
+    "peda",
+    "home",
+    "automation",
+    "slave",
+    "device",
+    "ralf"
+  ],
+  "author": "Jan-Henrik Bruhn <jh.bruhn@me.com>",
+  "license": "GPLv2",
+  "bugs": {
+    "url": "https://github.com/PedaAutomation/peda-slave/issues"
+  },
+  "homepage": "https://github.com/PedaAutomation/peda-slave",
+  "dependencies": {
+    "coffee-script": "^1.7.1",
+    "commander": "^2.3.0"
+  }
+}

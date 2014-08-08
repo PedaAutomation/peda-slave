@@ -1,0 +1,21 @@
+#!/usr/bin/env node
+
+function list(val) {
+  return val.split(',');
+}
+
+var program   = require('commander'),
+    npm       = require('npm'),
+    PedaSlave = require('../lib/index.js'),
+    pkg       = require('../package.json');
+
+program
+  .version(pkg.version)
+  .option('-P, --plugins <plugins>', 'The plugins you want to use.', list, [])
+  .parse(process.argv);
+
+npm.load(function() {
+  pedaSlave = new PedaSlave({ plugins: program.plugins }, npm);
+
+  pedaSlave.start();
+});
