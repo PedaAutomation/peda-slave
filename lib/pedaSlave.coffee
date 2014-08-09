@@ -1,4 +1,5 @@
-npm = require 'npm'
+logger = require './logger.coffee'
+
 
 PluginHelper = require('./pluginHelper.coffee')
 MDNSHelper = require './mdnsHelper.coffee'
@@ -10,18 +11,24 @@ class PedaSlave
   constructor: (@options, @npm) ->
     @pluginNames = @options.plugins
     @name = @options.name
+    
+    logger.info "Starting PedaSlave #{@name} with plugins #{@pluginNames.join(", ")}."
+
     @plugins = []
     @pluginHelpers = []
     @loadPlugins()
-
+    @waitForMdns()
+    logger.info "PedaSlave running."
   
   loadPlugins: ->
+    logger.info "Loading Plugins..."
+    
     for name in @pluginNames
       @loadPlugin name 
-    self = this
-    @mdnsHelper = new MDNSHelper()
-    @mdnsHelper.on 'masterFound', (url) ->
-      self.connect(url)
+      logger.info "Plugin #{name} loaded."
+      
+    logger.info "All Plugins loaded."
+    
 
   loadPlugin: (name) ->
     pluginLoader = require("#{@npm.globalDir}/#{name}")
@@ -36,19 +43,29 @@ class PedaSlave
       console.log e
       console.log("Could not load #{name}.")
   
+    
+  waitForMdns: ->
+    logger.info "Looking for master..."
+    self = this
+    @mdnsHelper = new MDNSHelper()
+    @mdnsHelper.on 'masterFound', (url) ->
+      self.connect(url)
       
   initPlugins: ->
     for helper in @pluginHelpers
       helper.emit 'init'
     
   connect: (url) ->
+    logger.info "Master found at #{url}, connecting!"
+    
     self = this
     
     url = "ws://" + url
     
     @ws = new WebSocket url
-    console.log url
+
     @ws.on 'open', ->
+      logger.info "Connected to Master!"
       self.sendWelcome()
       self.sendCapabilities()
     @ws.on 'message', (data) ->
@@ -58,9 +75,12 @@ class PedaSlave
     @ws.send JSON.stringify {message: name, data: data}  
   
   sendWelcome: ->
+    logger.info "Sending Welcome Message to Master."
     @sendMessage "name", @name
   
   sendCapabilities: ->
+    logger.info "Collecting Capabilities..."
+
     caps = []
     for helper in @pluginHelpers
       if helper.type == "input"
@@ -73,11 +93,14 @@ class PedaSlave
           regex = ev.regex.toString()
           name = id
           caps.push({type: "logic", name: "#{helper.getCapabilityName()}-#{name}", regex: regex})
-           
+          
+    logger.info "Sending #{caps.length} Capabilities to master"
+       
     @sendMessage "capabilities", caps
   
   handleMessage: (m) ->
-    
+    logger.info "Incoming \"#{m.message}\" message from Master."
+
     switch m.message
       when "handleOutput"
         for helper in @pluginHelpers
