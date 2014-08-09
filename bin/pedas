@@ -15,6 +15,10 @@ program
   .option('-N, --name <name>', 'The name of this slave.', "Slave")
   .parse(process.argv);
 
+process.on('uncaughtException', function(err) {
+  console.log('Caught exception: ' + err);
+});
+
 npm.load(function() {
   pedaSlave = new PedaSlave({ plugins: program.plugins, name: program.name }, npm);
 });

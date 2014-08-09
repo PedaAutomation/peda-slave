@@ -33,6 +33,7 @@ class PedaSlave
       @pluginHelpers.push helper
       @plugins.push plugin
     catch e
+      console.log e
       console.log("Could not load #{name}.")
   
       
@@ -51,7 +52,7 @@ class PedaSlave
       self.sendWelcome()
       self.sendCapabilities()
     @ws.on 'message', (data) ->
-      self.handleMessage data
+      self.handleMessage JSON.parse data
     
   sendMessage: (name, data) ->
     @ws.send JSON.stringify {message: name, data: data}  
@@ -76,8 +77,9 @@ class PedaSlave
     @sendMessage "capabilities", caps
   
   handleMessage: (m) ->
+    
     switch m.message
-      when "output"
+      when "handleOutput"
         for helper in @pluginHelpers
           if helper.type == "output"
             if m.data.targetCapability is helper.capability
