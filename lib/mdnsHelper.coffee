@@ -6,6 +6,7 @@ class MDNSHelper extends EventEmitter
   constructor: ->
     self = this
     @browser = mdns.createBrowser mdns.tcp 'pedam'
+    
     @browser.on 'serviceUp', (service) ->
       if not self.found
         address = null
@@ -14,10 +15,10 @@ class MDNSHelper extends EventEmitter
         return if not address?
         url = address + ":" + service.port
         self.emit 'masterFound', url
-        self.found = url
+        self.found = service.name
+    
     @browser.on 'serviceDown', (service) ->
-      url = service.addresses[0] + ":" + service.port
-      if self.found == url
+      if self.found == service.name
         self.found = null
         self.emit 'masterLost'
       
