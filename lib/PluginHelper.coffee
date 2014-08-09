@@ -8,9 +8,22 @@ class PluginHelper extends EventEmitter
     
   setName: (name) ->
     @name = name
+
+  setCapability: (capability) ->
+  	if @type isnt "input"
+  		@capability = capability
+  	else
+  		throw "Only output and logic plugin can have capabilities."
     
   setPlugin: (plugin) ->
     @plugin = plugin
     
-  
+  sendOutput: (result) ->  	
+  	@slave.sendMessage "outputForward", result
+
+  sendAimedOutput: (result, target) ->
+  	data
+  	data.data = result
+  	data.targetDevice = target
+
 module.exports = PluginHelper

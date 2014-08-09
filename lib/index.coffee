@@ -56,6 +56,15 @@ class PedaSlave
     @sendMessage name, @name
   
   handleMessage: (m) ->
-    
+  	switch m.message
+  		when "output"
+  			for helper in @pluginHelpers
+    			if m.data.targetCapability is helper.capability
+    				helper.emit 'output', m.data.data
+  		when "handleLogic"
+  			for helper in @pluginHelpers
+  				if m.data.capability is helper.capability
+  					helper.emit 'handleLogic', m.data.command
+
     
 module.exports = PedaSlave
