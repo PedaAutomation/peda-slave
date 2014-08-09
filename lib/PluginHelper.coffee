@@ -4,7 +4,7 @@ class PluginHelper extends EventEmitter
   constructor: (@pluginName, @slave) ->
     
   setType: (type) ->
-    @type = type if ["input", "output", "logic"].indexOf(type) > -1
+    @type = type if type in ["input", "output", "logic"]
     
   setName: (name) ->
     @name = name
