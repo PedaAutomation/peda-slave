@@ -73,7 +73,13 @@ class PedaSlave
       self.sendCapabilities()
     @ws.on 'message', (data) ->
       self.handleMessage JSON.parse data
-    
+  
+  stop: ->
+    logger.info "Stopping PedaSlave..."
+    # @ws.close() ROLF
+    logger.info "Shutting down."
+    process.exit()
+  
   sendMessage: (name, data) ->
     @ws.send JSON.stringify {message: name, data: data}  
   
