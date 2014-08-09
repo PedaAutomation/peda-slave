@@ -7,6 +7,7 @@ class PedaSlave
   constructor: (@options, @npm) ->
     @pluginNames = @options.plugins
     @plugins = []
+    @pluginHelpers = []
     @loadPlugins()
 
   
@@ -17,12 +18,20 @@ class PedaSlave
   loadPlugin: (name) ->
     pluginLoader = require("#{@npm.globalDir}/#{name}")
     plugin = null
-    try 
-      plugin = pluginLoader(new PluginHelper(name, this))
+    try
+      helper = new PluginHelper(name, this)
+      plugin = pluginLoader(helper)
+      helper.setPlugin plugin
+      @pluginHelpers.push helper
       @plugins.push plugin
     catch e
       console.log("Could not load #{name}.")
+      
+  initPlugins: ->
+    for helper in @pluginHelpers
+      helper.emit 'init'
     
   start: ->
+    
     
 module.exports = PedaSlave
