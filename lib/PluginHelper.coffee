@@ -25,6 +25,6 @@ class PluginHelper extends EventEmitter
     data
     data.data = result
     data.targetDevice = target
-    @slave.sendMessage "outputForward", result
+    @slave.sendMessage "outputForward", data
     
 module.exports = PluginHelper
