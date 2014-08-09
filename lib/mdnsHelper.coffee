@@ -11,6 +11,7 @@ class MDNSHelper extends EventEmitter
         address = null
         for a in service.addresses
           address = a if a.indexOf('.') > -1
+        return if not address?
         url = address + ":" + service.port
         self.emit 'masterFound', url
         self.found = url
