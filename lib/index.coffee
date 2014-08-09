@@ -10,8 +10,6 @@ class PedaSlave
   constructor: (@options, @npm) ->
     @pluginNames = @options.plugins
     @name = @options.name
-    @mdnsHelper = new MDNSHelper()
-    @mdnsHelper.on 'masterFound', @connect
     @plugins = []
     @pluginHelpers = []
     @loadPlugins()
@@ -20,7 +18,11 @@ class PedaSlave
   loadPlugins: ->
     for name in @pluginNames
       @loadPlugin name 
-  
+    self = this
+    @mdnsHelper = new MDNSHelper()
+    @mdnsHelper.on 'masterFound', (url) ->
+      self.connect(url)
+
   loadPlugin: (name) ->
     pluginLoader = require("#{@npm.globalDir}/#{name}")
     plugin = null
@@ -32,6 +34,7 @@ class PedaSlave
       @plugins.push plugin
     catch e
       console.log("Could not load #{name}.")
+  
       
   initPlugins: ->
     for helper in @pluginHelpers
@@ -45,7 +48,8 @@ class PedaSlave
     @ws = new WebSocket url
     console.log url
     @ws.on 'open', ->
-      self.sendWelcome
+      self.sendWelcome()
+      self.sendCapabilities()
     @ws.on 'message', (data) ->
       self.handleMessage data
     
@@ -53,18 +57,37 @@ class PedaSlave
     @ws.send JSON.stringify {message: name, data: data}  
   
   sendWelcome: ->
-    @sendMessage name, @name
+    @sendMessage "name", @name
+  
+  sendCapabilities: ->
+    caps = []
+    for helper in @pluginHelpers
+      if helper.type == "input"
+        caps.push({type: "input", name: helper.getCapabilityName()})
+      if helper.type == "output"
+        caps.push({type: "output", name: helper.getCapabilityName()})
+      if helper.type == "logic"
+        for id in helper.logicEvents
+          ev = helper.logicEvents[id]
+          regex = ev.regex.toString()
+          name = id
+          caps.push({type: "logic", name: "#{helper.getCapabilityName()}-#{name}", regex: regex})
+           
+    @sendMessage "capabilities", caps
   
   handleMessage: (m) ->
     switch m.message
       when "output"
         for helper in @pluginHelpers
-          if m.data.targetCapability is helper.capability
-            helper.emit 'output', m.data.data
+          if helper.type == "output"
+            if m.data.targetCapability is helper.capability
+              helper.emit 'output', m.data.data
       when "handleLogic"
         for helper in @pluginHelpers
-          if m.data.capability is helper.capability
-            helper.emit 'handleLogic', m.data.command
+          if helper.type == "logic"
+            capabilitiy = m.data.capability
+            target = capability.split(":")[1] 
+            helper.callLogic target, m.data
 
     
 module.exports = PedaSlave
