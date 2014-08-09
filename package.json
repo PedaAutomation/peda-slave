@@ -29,6 +29,7 @@
   "homepage": "https://github.com/PedaAutomation/peda-slave",
   "dependencies": {
     "coffee-script": "^1.7.1",
-    "commander": "^2.3.0"
+    "commander": "^2.3.0",
+    "mdns": "^2.2.0"
   }
 }

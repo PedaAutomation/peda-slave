@@ -16,6 +16,4 @@ program
 
 npm.load(function() {
   pedaSlave = new PedaSlave({ plugins: program.plugins }, npm);
-
-  pedaSlave.start();
 });

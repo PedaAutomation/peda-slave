@@ -1,11 +1,14 @@
 npm = require 'npm'
 
 PluginHelper = require('./PluginHelper.coffee')
+MDNSHelper = require './mdnsHelper.coffee'
 
 class PedaSlave
   
   constructor: (@options, @npm) ->
     @pluginNames = @options.plugins
+    @mdnsHelper = new MDNSHelper()
+    @mdnsHelper.on 'masterFound', @connect
     @plugins = []
     @pluginHelpers = []
     @loadPlugins()
@@ -31,7 +34,8 @@ class PedaSlave
     for helper in @pluginHelpers
       helper.emit 'init'
     
-  start: ->
-    
+  connect: (url) ->
+    url = "ws://" + url
+    console.log url
     
 module.exports = PedaSlave
