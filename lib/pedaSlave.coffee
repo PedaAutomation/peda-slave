@@ -18,6 +18,7 @@ class PedaSlave
     @pluginHelpers = []
     @loadPlugins()
     @waitForMdns()
+    
     logger.info "PedaSlave running."
   
   loadPlugins: ->
@@ -50,6 +51,8 @@ class PedaSlave
     @mdnsHelper = new MDNSHelper()
     @mdnsHelper.on 'masterFound', (url) ->
       self.connect(url)
+    @mdnsHelper.on 'masterLost', ->
+      logger.warn "Connection to master lost."
       
   initPlugins: ->
     for helper in @pluginHelpers
