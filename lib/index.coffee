@@ -83,7 +83,7 @@ class PedaSlave
         for helper in @pluginHelpers
           if helper.type == "output"
             if m.data.targetCapability is helper.capability
-              helper.emit 'output', m.data.data
+              helper.emit 'output', m.data
       when "handleLogic"
         for helper in @pluginHelpers
           if helper.type == "logic"
