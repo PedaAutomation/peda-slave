@@ -12,8 +12,9 @@ var program   = require('commander'),
 program
   .version(pkg.version)
   .option('-P, --plugins <plugins>', 'The plugins you want to use.', list, [])
+  .option('-N, --name <name>', 'The name of this slave.', "Slave")
   .parse(process.argv);
 
 npm.load(function() {
-  pedaSlave = new PedaSlave({ plugins: program.plugins }, npm);
+  pedaSlave = new PedaSlave({ plugins: program.plugins, name: program.name }, npm);
 });

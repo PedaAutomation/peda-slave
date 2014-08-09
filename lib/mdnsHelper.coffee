@@ -8,7 +8,10 @@ class MDNSHelper extends EventEmitter
     @browser = mdns.createBrowser mdns.tcp 'pedam'
     @browser.on 'serviceUp', (service) ->
       if not self.found
-        url = service.addresses[0] + ":" + service.port
+        address = null
+        for a in service.addresses
+          address = a if a.indexOf('.') > -1
+        url = address + ":" + service.port
         self.emit 'masterFound', url
         self.found = url
     @browser.on 'serviceDown', (service) ->

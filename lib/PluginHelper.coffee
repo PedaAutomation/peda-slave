@@ -11,5 +11,6 @@ class PluginHelper extends EventEmitter
     
   setPlugin: (plugin) ->
     @plugin = plugin
+    
   
 module.exports = PluginHelper

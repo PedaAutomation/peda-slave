@@ -2,11 +2,14 @@ npm = require 'npm'
 
 PluginHelper = require('./PluginHelper.coffee')
 MDNSHelper = require './mdnsHelper.coffee'
+WebSocket = require 'ws'
+
 
 class PedaSlave
   
   constructor: (@options, @npm) ->
     @pluginNames = @options.plugins
+    @name = @options.name
     @mdnsHelper = new MDNSHelper()
     @mdnsHelper.on 'masterFound', @connect
     @plugins = []
@@ -35,7 +38,24 @@ class PedaSlave
       helper.emit 'init'
     
   connect: (url) ->
+    self = this
+    
     url = "ws://" + url
+    
+    @ws = new WebSocket url
     console.log url
+    @ws.on 'open', ->
+      self.sendWelcome
+    @ws.on 'message', (data) ->
+      self.handleMessage data
+    
+  sendMessage: (name, data) ->
+    @ws.send JSON.stringify {message: name, data: data}  
+  
+  sendWelcome: ->
+    @sendMessage name, @name
+  
+  handleMessage: (m) ->
+    
     
 module.exports = PedaSlave
