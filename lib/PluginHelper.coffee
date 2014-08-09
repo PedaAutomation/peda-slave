@@ -25,7 +25,7 @@ class PluginHelper extends EventEmitter
     }
   
   callLogic: (name, data) ->
-    @logicEvents[name](data)
+    @logicEvents[name].callback(data)
   
   setPlugin: (plugin) ->
     @plugin = plugin
