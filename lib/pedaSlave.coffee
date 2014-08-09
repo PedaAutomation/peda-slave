@@ -1,6 +1,6 @@
 npm = require 'npm'
 
-PluginHelper = require('./PluginHelper.coffee')
+PluginHelper = require('./pluginHelper.coffee')
 MDNSHelper = require './mdnsHelper.coffee'
 WebSocket = require 'ws'
 
