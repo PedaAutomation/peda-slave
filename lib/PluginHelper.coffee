@@ -1,3 +1,5 @@
+logger = require('./logger.coffee')
+
 EventEmitter = require('events').EventEmitter
 
 class PluginHelper extends EventEmitter
@@ -23,7 +25,10 @@ class PluginHelper extends EventEmitter
     value = getLanguageValue "default", name if vale
     
     return value
-    
+  
+  log: (level, string) ->
+    logger.log level, "Plugin #{@pluginName}: #{string}"
+  
   getLanguageValue: (lang, name) ->
       data = @languageData[@lang]
       
