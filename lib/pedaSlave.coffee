@@ -16,7 +16,6 @@ class PedaSlave
 
     @plugins = []
     @pluginHelpers = []
-    @loadPlugins()
     @waitForMdns()
     
     logger.info "PedaSlave running."
@@ -35,12 +34,13 @@ class PedaSlave
     pluginLoader = require("#{@npm.globalDir}/#{name}")
     plugin = null
     try
-      helper = new PluginHelper(name, this)
+      helper = new PluginHelper(name, this, @language)
       plugin = pluginLoader(helper)
       helper.setPlugin plugin
       @pluginHelpers.push helper
       @plugins.push plugin
     catch e
+      console.log e
       logger.warn "Could not load #{name}.", e
   
     
@@ -52,6 +52,8 @@ class PedaSlave
       self.connect(url)
     @mdnsHelper.on 'masterLost', ->
       logger.warn "Connection to master lost."
+      self.plugins = []
+      self.pluginHelpers = []
       
   initPlugins: ->
     for helper in @pluginHelpers
@@ -69,9 +71,10 @@ class PedaSlave
     @ws.on 'open', ->
       logger.info "Connected to Master!"
       self.sendWelcome()
-      self.sendCapabilities()
+      
     @ws.on 'message', (data) ->
       self.handleMessage JSON.parse data
+      
   
   stop: ->
     logger.info "Stopping PedaSlave..."
@@ -120,6 +123,9 @@ class PedaSlave
           if helper.type == "logic"
             target = m.data.capability.split(":")[1] 
             helper.callLogic target, m.data
-
+      when "language"
+        @language = m.data
+        @loadPlugins()
+        @sendCapabilities()
     
 module.exports = PedaSlave

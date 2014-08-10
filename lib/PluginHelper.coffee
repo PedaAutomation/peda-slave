@@ -3,13 +3,13 @@ logger = require('./logger.coffee')
 EventEmitter = require('events').EventEmitter
 
 class PluginHelper extends EventEmitter
-  constructor: (@pluginName, @slave) ->
+  constructor: (@pluginName, @slave, @lang="en") ->
     @logicCapabilities = []
     @languageData = {}
-    @lang = "en" #TODO: load this from the master
     @logicEvents = []
   
   getLanguage: ->
+    console.log @lang
     @lang
   
   registerLanguage: (name, data, defaultLang = false) ->
@@ -18,6 +18,7 @@ class PluginHelper extends EventEmitter
         @languageData["default"] = data
   
   setLanguage: (lang) ->
+    console.log lang
     @lang = lang
   
   __: (name) ->
