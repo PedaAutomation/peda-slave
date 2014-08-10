@@ -30,7 +30,7 @@ class PluginHelper extends EventEmitter
     logger.log level, "Plugin #{@pluginName}: #{string}"
   
   getLanguageValue: (lang, name) ->
-      data = @languageData[@lang]
+      data = @languageData[lang]
       
       name.split(".")
       
