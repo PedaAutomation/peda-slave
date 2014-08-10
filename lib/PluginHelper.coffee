@@ -12,9 +12,9 @@ class PluginHelper extends EventEmitter
   getLanguage: ->
     @lang
   
-  registerLanguage: (name, data, default = false) ->
+  registerLanguage: (name, data, defaultLang = false) ->
       @languageData[name] = data
-      if default
+      if defaultLang
         @languageData["default"] = data
   
   setLanguage: (lang) ->
