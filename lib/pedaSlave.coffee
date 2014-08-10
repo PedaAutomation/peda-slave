@@ -41,8 +41,7 @@ class PedaSlave
       @pluginHelpers.push helper
       @plugins.push plugin
     catch e
-      console.log e
-      console.log("Could not load #{name}.")
+      logger.warn "Could not load #{name}.", e
   
     
   waitForMdns: ->
@@ -97,11 +96,11 @@ class PedaSlave
       if helper.type == "output"
         caps.push({type: "output", name: helper.getCapabilityName()})
       if helper.type == "logic"
-        for id in helper.logicEvents
+        for id of helper.logicEvents
           ev = helper.logicEvents[id]
           regex = ev.regex.toString()
           name = id
-          caps.push({type: "logic", name: "#{helper.getCapabilityName()}-#{name}", regex: regex})
+          caps.push({type: "logic", name: "#{helper.getCapabilityName()}:#{name}", regex: regex})
           
     logger.info "Sending #{caps.length} Capabilities to master"
        
@@ -114,13 +113,12 @@ class PedaSlave
       when "handleOutput"
         for helper in @pluginHelpers
           if helper.type == "output"
-            if m.data.targetCapability is helper.capability
+            if m.data.targetCapability.indexOf(helper.name) > -1
               helper.emit 'output', m.data
       when "handleLogic"
         for helper in @pluginHelpers
           if helper.type == "logic"
-            capabilitiy = m.data.capability
-            target = capability.split(":")[1] 
+            target = m.data.capability.split(":")[1] 
             helper.callLogic target, m.data
 
     

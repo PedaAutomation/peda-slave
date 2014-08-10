@@ -7,7 +7,7 @@ class PluginHelper extends EventEmitter
     @logicCapabilities = []
     @languageData = {}
     @lang = "en" #TODO: load this from the master
-    
+    @logicEvents = []
   
   getLanguage: ->
     @lang
@@ -32,17 +32,17 @@ class PluginHelper extends EventEmitter
   getLanguageValue: (lang, name) ->
       data = @languageData[lang]
       
-      name.split(".")
+      name = name.split("\\.")
       
       value = data
-      
+
       try
         for p in name
-          value[p] = value
+          value = value[p]
       catch
         return null
       
-      return lang 
+      return value 
   
   setType: (type) ->
     @type = type if type in ["input", "output", "logic"]
@@ -65,31 +65,31 @@ class PluginHelper extends EventEmitter
     }
   
   callLogic: (name, data) ->
-    @logicEvents[name].callback(data)
+    @logicEvents[name].callback(data, this)
   
   setPlugin: (plugin) ->
     @plugin = plugin
     
   sendOutput: (result) ->  	
-    @slave.sendMessage "outputForward", result
+    @slave.sendMessage "forwardOutput", result
 
   sendOutputToSlave: (result, target) ->
     data = {}
     data.data = result
     data.targetDevice = target
-    @slave.sendMessage "outputForward", data
+    @slave.sendMessage "forwardOutput", data
   
-  sendOutputToCapability: (result, cap) ->
+  sendOutputToCapability: (result, target) ->
     data = {}
     data.data = result
     data.targetCapability = target
-    @slave.sendMessage "outputForward", data
+    @slave.sendMessage "forwardOutput", data
     
-  sendOutputToCapabilityAndSlave: (result, cap, device) ->
+  sendOutputToCapabilityAndSlave: (result, target, device) ->
     data = {}
     data.data = result
     data.targetCapability = target
     data.targetDevice = device 
-    @slave.sendMessage "outputForward", data
+    @slave.sendMessage "forwardOutput", data
     
 module.exports = PluginHelper
