@@ -3,7 +3,38 @@ EventEmitter = require('events').EventEmitter
 class PluginHelper extends EventEmitter
   constructor: (@pluginName, @slave) ->
     @logicCapabilities = []
+    @languageData = {}
+    @lang = "en" #TODO: load this from the master
     
+  registerLanguage: (name, data, default = false) ->
+      @languageData[name] = data
+      if default
+        @languageData["default"] = data
+  
+  setLanguage: (lang) ->
+    @lang = lang
+  
+  __: (name) ->
+    value = getLanguageValue @lang, name
+    value = getLanguageValue "default", name if vale
+    
+    return value
+    
+  getLanguageValue: (lang, name) ->
+      data = @languageData[@lang]
+      
+      name.split(".")
+      
+      value = data
+      
+      try
+        for p in name
+          value[p] = value
+      catch
+        return null
+      
+      return lang 
+  
   setType: (type) ->
     @type = type if type in ["input", "output", "logic"]
     
