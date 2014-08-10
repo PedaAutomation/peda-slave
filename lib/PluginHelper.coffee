@@ -22,7 +22,7 @@ class PluginHelper extends EventEmitter
   
   __: (name) ->
     value = getLanguageValue @lang, name
-    value = getLanguageValue "default", name if vale
+    value = getLanguageValue "default", name if not value
     
     return value
   
