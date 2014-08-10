@@ -6,6 +6,10 @@ class PluginHelper extends EventEmitter
     @languageData = {}
     @lang = "en" #TODO: load this from the master
     
+  
+  getLanguage: ->
+    @lang
+  
   registerLanguage: (name, data, default = false) ->
       @languageData[name] = data
       if default
