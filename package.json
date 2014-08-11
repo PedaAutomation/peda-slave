@@ -30,6 +30,7 @@
   "dependencies": {
     "coffee-script": "^1.7.1",
     "commander": "^2.3.0",
+    "npm": "^1.4.23",
     "winston": "^0.7.3",
     "ws": "^0.4.32"
   },
