@@ -12,11 +12,16 @@ class PedaSlave
     @pluginNames = @options.plugins
     @name = @options.name
     
+    
     logger.info "Starting PedaSlave #{@name} with plugins #{@pluginNames.join(", ")}."
 
     @plugins = []
     @pluginHelpers = []
-    @waitForMdns()
+    
+    if @options.master
+      @connect @options.master
+    else
+      @waitForMdns()
     
     logger.info "PedaSlave running."
   

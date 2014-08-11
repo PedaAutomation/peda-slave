@@ -30,8 +30,10 @@
   "dependencies": {
     "coffee-script": "^1.7.1",
     "commander": "^2.3.0",
-    "mdns": "^2.2.0",
     "winston": "^0.7.3",
     "ws": "^0.4.32"
+  },
+  "optionalDependencies": {
+    "mdns": "^2.2.0"
   }
 }

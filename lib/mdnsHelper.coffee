@@ -1,9 +1,13 @@
 EventEmitter = require('events').EventEmitter
 
-mdns = require('mdns')
-
+try
+  mdns = require('mdns')
+catch
+  mdns = null
+  
 class MDNSHelper extends EventEmitter
   constructor: ->
+    return if not mdns?
     self = this
     @browser = mdns.createBrowser mdns.tcp 'pedam'
     

@@ -14,6 +14,7 @@ program
   .version(pkg.version)
   .option('-P, --plugins <plugins>', 'The plugins you want to use.', list, [])
   .option('-N, --name <name>', 'The name of this slave.', "Slave")
+  .option('-m, --master <url>', 'The IPAddress and port of the master. [Optional]')
   .parse(process.argv);
 
 
@@ -22,7 +23,7 @@ process.on('uncaughtException', function(err) {
 });
 
 npm.load(function() {
-  pedaSlave = new PedaSlave({ plugins: program.plugins, name: program.name }, npm);
+  pedaSlave = new PedaSlave({ plugins: program.plugins, name: program.name, master: program.master }, npm);
   process.on('exit', pedaSlave.stop);
   process.on('SIGINT', process.exit);
 });
