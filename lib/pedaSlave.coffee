@@ -36,9 +36,9 @@ class PedaSlave
     
 
   loadPlugin: (name) ->
-    pluginLoader = require("#{process.cwd()}/node_modules/#{name}")
-    plugin = null
+    
     try
+      pluginLoader = require("#{process.cwd()}/node_modules/#{name.trim()}")
       helper = new PluginHelper(name, this, @language)
       plugin = pluginLoader(helper)
       helper.setPlugin plugin
