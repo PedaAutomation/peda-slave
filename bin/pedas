@@ -5,7 +5,6 @@ function list(val) {
 }
 
 var program   = require('commander'),
-    npm       = require('npm'),
     PedaSlave = require('../lib/index.js'),
     pkg       = require('../package.json');
 
@@ -22,8 +21,6 @@ process.on('uncaughtException', function(err) {
   console.log('Caught exception:', err);
 });
 
-npm.load(function() {
-  pedaSlave = new PedaSlave({ plugins: program.plugins, name: program.name, master: program.master }, npm);
-  process.on('exit', pedaSlave.stop);
-  process.on('SIGINT', process.exit);
-});
+pedaSlave = new PedaSlave({ plugins: program.plugins, name: program.name, master: program.master });
+process.on('exit', pedaSlave.stop);
+process.on('SIGINT', process.exit);

@@ -8,7 +8,7 @@ WebSocket = require 'ws'
 
 class PedaSlave
   
-  constructor: (@options, @npm) ->
+  constructor: (@options) ->
     @pluginNames = @options.plugins
     @name = @options.name
     
@@ -36,7 +36,7 @@ class PedaSlave
     
 
   loadPlugin: (name) ->
-    pluginLoader = require("#{@npm.globalDir}/#{name}")
+    pluginLoader = require(name)
     plugin = null
     try
       helper = new PluginHelper(name, this, @language)
