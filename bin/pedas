@@ -1,7 +1,11 @@
 #!/usr/bin/env node
 
 function list(val) {
-  return val.split(',');
+  var vals = val.split(',');
+  vals.forEach(function(v, i) {
+    vals[i] = v.trim();
+  });
+  return vals;
 }
 
 var program   = require('commander'),
