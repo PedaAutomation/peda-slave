@@ -5,6 +5,7 @@ function list(val) {
   vals.forEach(function(v, i) {
     vals[i] = v.trim();
   });
+  return vals;
 }
 
 var program   = require('commander'),
