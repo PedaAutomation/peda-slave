@@ -27,6 +27,10 @@ class PluginHelper extends EventEmitter
     
     return value
   
+  __regex: (name) ->
+    string = @__ name
+    return RegExp.apply(undefined, /^\/(.*)\/(.*)/.exec(string).slice(1))
+
   log: (level, string) ->
     logger.log level, "Plugin #{@pluginName}: #{string}"
   
