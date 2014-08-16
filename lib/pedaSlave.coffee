@@ -123,7 +123,7 @@ class PedaSlave
           if helper.type == "output"
             if not m.data.targetCapability?
               helper.emit 'output', m.data
-            if m.data.targetCapability.indexOf(helper.name) > -1
+            else if m.data.targetCapability.indexOf(helper.name) > -1
               helper.emit 'output', m.data.data
       when "handleLogic"
         for helper in @pluginHelpers
